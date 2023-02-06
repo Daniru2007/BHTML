@@ -145,8 +145,30 @@ impl<'a, 'b> Token<'a, 'b> {}
 pub fn tokenize(content: String) -> Vec<Token<'static, 'static>> {
     let mut tokens: Vec<Token> = Vec::new();
     let content_chars: Vec<char> = content.chars().collect();
-    let index = 0;
-    while index < content_chars.len() {}
+    let mut index = 0;
+    while index < content_chars.len() {
+        println!("{}", content_chars[index]);
+        let character = content_chars[index];
+        let token_type;
+        match character {
+            '(' => token_type = TT_LPARAN,
+            ')' => token_type = TT_RPARAN,
+            '{' => token_type = TT_LCURLY,
+            '}' => token_type = TT_RCURLY,
+            '#' => token_type = TT_HASH,
+            '.' => token_type = TT_DOT,
+            '\n' => token_type = "",
+            '\t' => token_type = "",
+            _ => token_type = "",
+        }
+        if token_type != "" {
+            tokens.push(Token {
+                token_type: token_type,
+                token_val: None,
+            });
+        }
+        index += 1;
+    }
     println!("[TOKENIZING]");
     return tokens;
 }
