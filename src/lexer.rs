@@ -1,16 +1,16 @@
-const TT_ELEMENT: &str = "ELEMENT";
-const TT_CLASS_NAME: &str = "CLASS_NAME";
-const TT_TEXT: &str = "TEXT";
-const TT_NUMBER: &str = "NUMBER";
-const TT_ATTRIB_NAME: &str = "ATTRIB_NAME";
-const TT_LPARAN: &str = "LPARAN";
-const TT_RPARAN: &str = "RPARAN";
-const TT_LCURLY: &str = "LCURLY";
-const TT_RCURLY: &str = "RCURLY";
-const TT_DOT: &str = "DOT";
-const TT_HASH: &str = "HASH";
-const TT_NEWLINE: &str = "NEWLINE";
-const TT_EOF: &str = "EOF";
+static TT_ELEMENT: &str = "ELEMENT";
+static TT_CLASS_NAME: &str = "CLASS_NAME";
+static TT_TEXT: &str = "TEXT";
+static TT_NUMBER: &str = "NUMBER";
+static TT_ATTRIB_NAME: &str = "ATTRIB_NAME";
+static TT_LPARAN: &str = "LPARAN";
+static TT_RPARAN: &str = "RPARAN";
+static TT_LCURLY: &str = "LCURLY";
+static TT_RCURLY: &str = "RCURLY";
+static TT_DOT: &str = "DOT";
+static TT_HASH: &str = "HASH";
+static TT_NEWLINE: &str = "NEWLINE";
+static TT_EOF: &str = "EOF";
 
 fn is_element(element: &str) -> bool {
     let elements: Vec<&str> = vec![
@@ -135,6 +135,7 @@ fn is_element(element: &str) -> bool {
     return elements.contains(&element);
 }
 
+#[derive(Clone, Copy)]
 pub struct Token<'a, 'b> {
     token_type: &'a str,
     token_val: Option<&'b str>,
@@ -142,33 +143,53 @@ pub struct Token<'a, 'b> {
 
 impl<'a, 'b> Token<'a, 'b> {}
 
-pub fn tokenize(content: String) -> Vec<Token<'static, 'static>> {
-    let mut tokens: Vec<Token> = Vec::new();
-    let content_chars: Vec<char> = content.chars().collect();
-    let mut index = 0;
-    while index < content_chars.len() {
-        println!("{}", content_chars[index]);
-        let character = content_chars[index];
-        let token_type;
-        match character {
-            '(' => token_type = TT_LPARAN,
-            ')' => token_type = TT_RPARAN,
-            '{' => token_type = TT_LCURLY,
-            '}' => token_type = TT_RCURLY,
-            '#' => token_type = TT_HASH,
-            '.' => token_type = TT_DOT,
-            '\n' => token_type = "",
-            '\t' => token_type = "",
-            _ => token_type = "",
-        }
-        if token_type != "" {
-            tokens.push(Token {
-                token_type: token_type,
-                token_val: None,
-            });
-        }
-        index += 1;
+pub struct Lexer {
+    tokens: Vec<Token<'static, 'static>>,
+    content_chars: Vec<char>,
+    index: usize,
+}
+
+impl Lexer {
+    pub fn new(content: String) -> Lexer {
+        let tokens = Vec::new();
+        let content_chars = content.chars().collect();
+        let index = 0;
+        return Lexer {
+            tokens: tokens,
+            content_chars: content_chars,
+            index: index,
+        };
     }
-    println!("[TOKENIZING]");
-    return tokens;
+    pub fn tokenize(&mut self) {
+        while self.index < self.content_chars.len() {
+            let character = self.content_chars[self.index];
+            let token_type;
+            match character {
+                '(' => token_type = TT_LPARAN,
+                ')' => token_type = TT_RPARAN,
+                '{' => token_type = TT_LCURLY,
+                '}' => token_type = TT_RCURLY,
+                '#' => token_type = TT_HASH,
+                '.' => token_type = TT_DOT,
+                '\n' => token_type = "",
+                '\t' => token_type = "",
+                _ => token_type = "",
+            }
+            if token_type != "" {
+                println!("{}", token_type);
+                self.tokens.push(Token {
+                    token_type: token_type.clone(),
+                    token_val: None,
+                });
+            }
+            self.index += 1;
+        }
+        println!("[TOKENIZING]");
+    }
+}
+
+pub fn tokenize(content: String) -> Vec<Token<'static, 'static>> {
+    let mut lexer = Lexer::new(content);
+    lexer.tokenize();
+    return lexer.tokens.clone();
 }
