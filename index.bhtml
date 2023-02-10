@@ -1,5 +1,5 @@
 body{
-    div.classname#divId{
+    div.testClass#divId{
         h1.head#headText{
             "Hi There!"
         }

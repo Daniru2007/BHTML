@@ -13,10 +13,10 @@ static TT_HASH: &str = "HASH";
 static TT_NEWLINE: &str = "NEWLINE";
 static TT_EOF: &str = "EOF";
 
-static STRING_CHARS: [char; 55] = [
+static STRING_CHARS: [char; 56] = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
     't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
-    'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '-', '_', '=',
+    'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '-', '_', '=', '~',
 ];
 
 fn is_element(element: &str) -> bool {
@@ -276,8 +276,11 @@ fn is_attrib(attrib: &str) -> bool {
     return attribs.contains(&attrib);
 }
 
-#[derive(Clone)]
+fn is_string(character: char) -> bool {
+    return STRING_CHARS.contains(&character);
+}
 
+#[derive(Clone, Debug)]
 pub struct Token {
     token_type: String,
     token_val: Option<String>,
@@ -285,6 +288,7 @@ pub struct Token {
 
 impl Token {}
 
+#[derive(Debug)]
 pub struct Lexer {
     tokens: Vec<Token>,
     content_chars: Vec<char>,
@@ -318,6 +322,25 @@ impl Lexer {
         })
     }
 
+    fn find_text(&mut self) -> String {
+        let mut value = String::new();
+        while is_string(self.content_chars[self.index]) {
+            value.push(self.content_chars[self.index]);
+            self.advance();
+        }
+        return value;
+    }
+
+    fn find_str(&mut self) -> String {
+        let mut value = String::new();
+        while self.content_chars[self.index] != '"' {
+            value.push(self.content_chars[self.index]);
+            self.advance();
+        }
+        self.advance();
+        return value;
+    }
+
     pub fn tokenize(&mut self) {
         while self.index < self.content_chars.len() {
             let character = self.content_chars[self.index];
@@ -340,7 +363,43 @@ impl Lexer {
             if character == '}' {
                 self.add_tok(TT_RCURLY, None);
                 self.advance();
+            }
+            if character == '.' {
+                self.advance();
+                let value = self.find_text();
+                self.add_tok(TT_CLASS_NAME, Some(&value[..]));
+            }
+            if character == '#' {
+                self.advance();
+                let value = self.find_text();
+                self.add_tok(TT_ID_NAME, Some(&value[..]));
+            }
+            if character == '"' {
+                self.advance();
+                let value = self.find_str();
+                self.add_tok(TT_TEXT, Some(&value[..]));
+            }
+            if is_string(character) {
+                let mut t_type = "";
+                let value = self.find_text();
+                if is_element(&value[..]) {
+                    t_type = TT_ELEMENT;
+                } else if is_attrib(&value[..]) {
+                    t_type = TT_ATTRIB_NAME;
+                }
+                // assert_eq!(t_type, "");
+                self.add_tok(t_type, Some(&value[..]));
+            }
+            if character == ' ' {
+                self.advance();
+            }
+            if character == '\t' {
+                self.advance();
+            }
+            if character == '\n' {
+                self.advance();
             } else {
+                println!("{}", character);
                 self.advance();
             }
         }
