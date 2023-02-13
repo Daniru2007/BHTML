@@ -407,7 +407,9 @@ impl Lexer {
                     t_type = TT_ATTRIB_NAME;
                 }
                 // assert_eq!(t_type, "");
-                self.add_tok(t_type, Some(&value[..]));
+                if value != "" {
+                    self.add_tok(t_type, Some(&value[..]));
+                }
             } else if character == ' ' {
                 self.advance();
             } else if character == '\t' {
