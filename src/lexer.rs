@@ -11,12 +11,12 @@ static TT_NEWLINE: &str = "NEWLINE";
 static TT_EQ: &str = "EQ";
 static TT_EOF: &str = "EOF";
 
-static STRING_CHARS: [char; 78] = [
+static STRING_CHARS: [char; 91] = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
     't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
     'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '-', '_', '=', '~', '.',
     ' ', ';', ':', '[', ']', '<', '>', '/', '?', '`', '!', '@', '#', '%', '^', '&', '*', '(', ')',
-    '"', '\\',
+    '"', '\\', '\n', '\t', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '\r',
 ];
 
 static TEXT_CHARS: [char; 65] = [
@@ -354,6 +354,7 @@ impl Lexer {
                 match self.content_chars[self.index] {
                     'n' => value.push('\n'),
                     't' => value.push('\t'),
+                    'r' => value.push('\r'),
                     '\\' => value.push('\\'),
                     '\'' => value.push('\''),
                     '"' => value.push('"'),
