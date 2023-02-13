@@ -1,4 +1,5 @@
 mod lexer;
+mod parser;
 mod read_file;
 
 fn main() {
@@ -7,4 +8,5 @@ fn main() {
     for tok in tokens {
         println!("{:?}", tok);
     }
+    parser::parse(tokens);
 }
