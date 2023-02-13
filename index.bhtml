@@ -3,7 +3,7 @@ body{
         h1.head#headText{
             "Hi There!"
         }
-        a(href="https://www.youtube.com/"){
+        a(href="https://www.youtube.com/){
             "link"
         }
     }
