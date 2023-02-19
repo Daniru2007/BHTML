@@ -1,15 +1,15 @@
-static TT_ELEMENT: &str = "ELEMENT";
-static TT_CLASS_NAME: &str = "CLASS_NAME";
-static TT_ID_NAME: &str = "ID_NAME";
-static TT_TEXT: &str = "TEXT";
-static TT_ATTRIB_NAME: &str = "ATTRIB_NAME";
-static TT_LPARAN: &str = "LPARAN";
-static TT_RPARAN: &str = "RPARAN";
-static TT_LCURLY: &str = "LCURLY";
-static TT_RCURLY: &str = "RCURLY";
-static TT_NEWLINE: &str = "NEWLINE";
-static TT_EQ: &str = "EQ";
-static TT_EOF: &str = "EOF";
+pub static TT_ELEMENT: &str = "ELEMENT";
+pub static TT_CLASS_NAME: &str = "CLASS_NAME";
+pub static TT_ID_NAME: &str = "ID_NAME";
+pub static TT_TEXT: &str = "TEXT";
+pub static TT_ATTRIB_NAME: &str = "ATTRIB_NAME";
+pub static TT_LPARAN: &str = "LPARAN";
+pub static TT_RPARAN: &str = "RPARAN";
+pub static TT_LCURLY: &str = "LCURLY";
+pub static TT_RCURLY: &str = "RCURLY";
+pub static TT_NEWLINE: &str = "NEWLINE";
+pub static TT_EQ: &str = "EQ";
+pub static TT_EOF: &str = "EOF";
 
 static STRING_CHARS: [char; 91] = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
@@ -293,8 +293,8 @@ fn is_string(character: char) -> bool {
 
 #[derive(Clone, Debug)]
 pub struct Token {
-    token_type: String,
-    token_val: Option<String>,
+    pub token_type: String,
+    pub token_val: Option<String>,
 }
 
 impl Token {}

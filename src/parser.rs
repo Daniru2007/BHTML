@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::lexer::Token;
+use crate::lexer::*;
 
 pub trait Node {
     fn clone(&self) -> Box<dyn Node>;
@@ -119,6 +119,7 @@ impl Node for TextNode {
 pub struct Parser {
     index: usize,
     nodes: Arc<Box<dyn Node>>,
+    tokens: Vec<Token>,
 }
 
 impl Parser {
@@ -126,12 +127,18 @@ impl Parser {
         self.index += 1;
     }
 
-    // fn add_tok(&mut self, node: Box<dyn Node>) {
-    //     if let Some(nodes) = Arc::get_mut(&mut self.nodes) {
-    //         nodes.push(node);
-    //     }
-    // }
-    fn parse(&mut self, tokens: Vec<Token>) {}
+    fn find_element(&mut self) -> Arc<Vec<Box<dyn Node>>> {
+        let nodes = vec![];
+        return Arc::new(nodes);
+    }
+
+    fn parse(&mut self) {
+        if self.tokens[self.index].token_type == TT_ELEMENT {
+            let elements = self.find_element();
+        } else {
+            return;
+        }
+    }
 }
 
 pub fn parse(tokens: Vec<Token>) -> Arc<Box<dyn Node>> {
@@ -141,7 +148,8 @@ pub fn parse(tokens: Vec<Token>) -> Arc<Box<dyn Node>> {
             node_type: String::from("something"),
             child_nodes: None,
         })),
+        tokens: tokens.clone(),
     };
-    parser.parse(tokens);
+    parser.parse();
     return parser.nodes.clone();
 }
