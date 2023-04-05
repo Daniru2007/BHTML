@@ -7,7 +7,6 @@ pub trait Node {
     fn clone_box(&self) -> Box<dyn Node>;
     fn get_type(&self) -> String;
 }
-
 struct ElementNode {
     node_type: String,
     child_nodes: Option<Arc<Vec<Box<dyn Node>>>>,
