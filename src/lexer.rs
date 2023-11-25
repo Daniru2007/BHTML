@@ -427,6 +427,7 @@ impl Lexer {
     }
 }
 
+// Tokenizer Function
 pub fn tokenize(content: String) -> Vec<Token> {
     let mut lexer = Lexer::new(content);
     lexer.tokenize();
